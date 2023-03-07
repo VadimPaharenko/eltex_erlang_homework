@@ -1,5 +1,6 @@
 # eltex_erlang_homework
 Homework Erlang
+
 В этой домашней работе я ознакомился с работой функций в Erlang.
 Посмотрел как работает guard "when" и "case" условия.
 
