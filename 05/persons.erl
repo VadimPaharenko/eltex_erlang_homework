@@ -42,10 +42,8 @@ update(Pred,List)->
 update(_,[],Acc)->
     lists:reverse(Acc);
 update(Pred,[Head|Tail],Acc)->
-    case Head of 
-        #person{name = "Jack"} -> update(Pred,Tail,[Pred(Head)|Acc]);
-        _ -> update(Pred,Tail,[Head|Acc])
-    end.
+        update(Pred,Tail,[Pred(Head)|Acc]).
+
 
 
 get_average_age(Persons)->
