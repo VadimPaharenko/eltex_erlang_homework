@@ -46,9 +46,9 @@ update(Pred,[Head|Tail],Acc)->
 
 
 
-get_average_age(Persons)->
+get_average_age(Persons) when is_list(Persons) ->
     case Persons of 
-        []-> io:format("Lists of persons is empty ~n");
+        []-> 0;
         [_Head|_Tail]->
             F = fun(#person{age=Age},{Acc1, Acc2}) ->
                 {Age+Acc1, Acc2+1}
