@@ -30,5 +30,5 @@ ipv4_listener() ->
     receive
         {ipv4, From, BinData} when is_binary(BinData) ->
             From ! protocol:ipv4(BinData);
-        Error -> io:format("Error arg ~p~n",[Error])
+        _ -> erlang:error(badarg)
     end.
