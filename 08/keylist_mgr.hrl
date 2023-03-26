@@ -1,3 +1,0 @@
--record(state,{
-    children = [] :: list
-}).
