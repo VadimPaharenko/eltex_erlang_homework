@@ -29,7 +29,7 @@ loop(#state{children = Children} = State) when is_list(Children) ->
                     loop(State)
             end;
         stop ->
-            process_flag(trap_exit, false),
+            process_flag(trap_exit, fa),
             exit(whereis(?MODULE), stop_command);
         {From, get_names} ->
             Proc_Names = [X || {X,_} <- Children],
@@ -38,10 +38,12 @@ loop(#state{children = Children} = State) when is_list(Children) ->
         {'EXIT', Pid, Reason} ->
             self() ! {'DOWN', process, Pid, Reason},
             case lists:keyfind(Pid, 2, Children) of
-                {Proc_name, Pid} -> NewState = State#state{children = proplists:delete(Proc_name, Children)},
+                {Proc_name, Pid} -> 
+                NewState = State#state{children = proplists:delete(Proc_name, Children)},
                 io:format("Down process ~p with reason ~p ~n",[Pid, Reason]),
                 loop(NewState);
-                false -> loop(State)
+                false -> 
+                    loop(State)
             end
     end.
 
