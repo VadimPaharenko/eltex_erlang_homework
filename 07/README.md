@@ -34,7 +34,7 @@ Homework Erlang
 
 5> flush().
 
-Shell got {ok,1}
+Shell got {ok,{state,[{bob,100,"man"},{andy,99,"man"}],1}}
 ok
 
 6> Pid ! {self(), add, vadim, 24, "man"}.
@@ -43,7 +43,7 @@ ok
 
 7> flush().
 
-Shell got {ok,2}
+Shell got {ok,{state,[{vadim,24,"man"},{bob,100,"man"},{andy,99,"man"}],2}}
 ok
 
 8> Pid ! {self(), is_member, bob}.
@@ -52,7 +52,7 @@ ok
 
 9> flush().
 
-Shell got {ok,3}
+Shell got {true,{state,[{vadim,24,"man"},{bob,100,"man"},{andy,99,"man"}],3}}
 ok
 
 10> Pid ! {self(), take, bob}.
@@ -61,7 +61,7 @@ ok
 
 11> flush().
 
-Shell got {ok,4}
+Shell got {{bob,100,"man"},{state,[{vadim,24,"man"},{andy,99,"man"}],4}}
 ok
 
 12> Pid ! {self(), find, vadim}.
@@ -70,7 +70,7 @@ ok
 
 13> flush().
 
-Shell got {ok,5}
+Shell got {{vadim,24,"man"},{state,[{vadim,24,"man"},{andy,99,"man"}],5}}
 ok
 
 14> Pid ! {self(), delete, vadim}.
@@ -79,7 +79,7 @@ ok
 
 15> flush().
 
-Shell got {ok,6}
+Shell got {ok,{state,[{andy,99,"man"}],6}}
 ok
 
 2 задание********************************************************************************************************************************************
