@@ -28,7 +28,7 @@ loop(#state{children = Children} = State) when is_list(Children) ->
                     From ! {ok, NewState},
                     loop(NewState);
                 false ->
-                    From ! {ok, process_does_not_exist},
+                    From ! undefined,
                     loop(State)
             end;
         stop ->
