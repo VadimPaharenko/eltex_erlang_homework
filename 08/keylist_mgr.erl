@@ -52,7 +52,6 @@ loop(#state{children = Children} = State) when is_list(Children) ->
 
 
 start() ->
-    Pid = spawn(?MODULE, loop, [#state{}]),
+    {Pid, MonitorRef} = spawn_monitor(?MODULE, loop, [#state{}]),
     register(?MODULE, Pid),
-    MonitorRef = monitor(process, Pid),
     {ok, Pid, MonitorRef}.

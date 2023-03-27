@@ -36,14 +36,12 @@ loop(#state{list = List, counter = Counter} = State) when is_list(List), is_inte
 
 
 start(Name) ->
-    Pid = spawn(keylist, loop, [#state{}]),
+    {Pid, MonitorRef} = spawn_monitor(keylist, loop, [#state{}]),
     register(Name, Pid),
-    MonitorRef = monitor(process, Pid),
     {Pid, MonitorRef}.
 
 
 start_link(Name) ->
-    Pid = spawn(keylist, loop, [#state{}]),
-    link(Pid),
+    Pid = spawn_link(keylist, loop, [#state{}]),
     register(Name, Pid),
     Pid.
