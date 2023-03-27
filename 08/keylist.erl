@@ -1,8 +1,11 @@
 -module(keylist).
+-export([loop/1]).
+-export([start/1, start_link/1]).
 
--include("C:/Users/proha/OneDrive/Рабочий стол/Erlang/eltex_erlang_homework/07/keylist.hrl").
-
--export([loop/1, start/1, start_link/1]).
+-record(state,{
+    list = [] :: list,
+    counter = 0 :: non_neg_integer
+}).
 
 loop(#state{list = List, counter = Counter} = State) when is_list(List), is_integer(Counter)->
     receive

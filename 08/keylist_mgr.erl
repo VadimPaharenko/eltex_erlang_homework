@@ -1,7 +1,10 @@
 -module(keylist_mgr).
--include("keylist_mgr.hrl").
--export([loop/1, start/0]).
+-export([loop/1]).
+-export([start/0]).
 
+-record(state,{
+    children = [] :: list
+}).
 
 loop(#state{children = Children} = State) when is_list(Children) ->
     process_flag(trap_exit, true),
@@ -29,20 +32,20 @@ loop(#state{children = Children} = State) when is_list(Children) ->
                     loop(State)
             end;
         stop ->
-            process_flag(trap_exit, fa),
+            process_flag(trap_exit, false),
             exit(whereis(?MODULE), stop_command);
         {From, get_names} ->
             Proc_Names = [X || {X,_} <- Children],
             From ! lists:reverse(Proc_Names),
             loop(State);
         {'EXIT', Pid, Reason} ->
-            self() ! {'DOWN', process, Pid, Reason},
             case lists:keyfind(Pid, 2, Children) of
                 {Proc_name, Pid} -> 
-                NewState = State#state{children = proplists:delete(Proc_name, Children)},
-                io:format("Down process ~p with reason ~p ~n",[Pid, Reason]),
-                loop(NewState);
-                false -> 
+                    NewState = State#state{children = proplists:delete(Proc_name, Children)},
+                    io:format("Down process ~p with reason ~p ~n",[Pid, Reason]),
+                    loop(NewState);
+                false ->
+                    io:format("Process with Pid ~p undefined ~n",[Pid]),
                     loop(State)
             end
     end.
