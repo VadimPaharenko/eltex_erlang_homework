@@ -1,8 +1,11 @@
 -module(keylist).
+-export([loop/1]).
+-export([start/1, start_link/1]).
 
--include("keylist.hrl").
-
--export([loop/1, start/1, start_link/1]).
+-record(state,{
+    list = [],
+    counter = 0
+}).
 
 loop(#state{list = List, counter = Counter} = State) when is_list(List), is_integer(Counter)->
     receive
