@@ -16,13 +16,13 @@ Homework Erlang
 
 1 задание********************************************************************************************************************************************
 
-1> rr("keylist.hrl").
-
-[state]
-
-2> c(keylist).
+1> c(keylist).
 
 {ok,keylist}
+
+2> rr(keylist.erl).
+
+[state]
 
 3> Pid = spawn(keylist, loop, [#state{list = [{andy, 99, "man"}], counter = 0}]).
 
