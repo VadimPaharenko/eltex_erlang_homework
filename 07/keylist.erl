@@ -3,8 +3,8 @@
 -export([start/1, start_link/1]).
 
 -record(state,{
-    list = [],
-    counter = 0
+    list = [] :: list,
+    counter = 0 :: non_neg_integer
 }).
 
 loop(#state{list = List, counter = Counter} = State) when is_list(List), is_integer(Counter)->
