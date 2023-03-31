@@ -49,7 +49,7 @@ get_names() ->
 %% can spawn_link new processes, delete processes, give names of already running processes, restart or log exit processes or exit main process keylist_mgr.
 %% All names process and parametrs stored in record State.
 -spec(loop(#state{children :: list(), permanent :: list()}) ->
-    no_return()).
+    string() | no_return()).
 loop(#state{children = Children, permanent = Permanent} = State) when is_list(Children), is_list(Permanent) ->
     process_flag(trap_exit, true),
     receive
@@ -93,14 +93,15 @@ loop(#state{children = Children, permanent = Permanent} = State) when is_list(Ch
             loop(State);
         {'EXIT', Pid, Reason} ->
             case lists:keyfind(Pid, 2, Children) of
-                {Proc_name, Pid} -> 
+                {Name, Pid} -> 
                     case lists:member(Pid, Permanent) of
                         true ->
-                            New_Pid = keylist:start_link(Proc_name),
-                            NewState = State#state{children = Children, permanent = [New_Pid | lists:delete(Pid, Permanent)]},
-                            io:format("Down process ~p with reason ~p, restarted with new pid ~p ~n",[Proc_name, Reason, New_Pid]);
+                            New_Pid = keylist:start_link(Name),
+                            NewState = State#state{children = [{Name, New_Pid} | proplists:delete(Name, Children)],
+                                permanent = [New_Pid | lists:delete(Pid, Permanent)]},
+                            io:format("Down process ~p with reason ~p, restarted with new pid ~p ~n",[Name, Reason, New_Pid]);
                         false ->
-                            NewState = State#state{children = proplists:delete(Proc_name, Children), permanent = Permanent},
+                            NewState = State#state{children = proplists:delete(Name, Children), permanent = Permanent},
                             io:format("Down process ~p with reason ~p ~n",[Pid, Reason])
                     end,
                     loop(NewState);
