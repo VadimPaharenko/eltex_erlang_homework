@@ -1,8 +1,6 @@
 # eltex_erlang_homework
 Homework Erlang
 
-Не очень понимаю, что конкретно нужно писать в выводе.
-
 Добавил функции init и terminate для keylist и keylist_mgr.
 
 Добавил документацию для keylist, поменял spec для обоих модулей.
@@ -23,7 +21,7 @@ Homework Erlang
 
 3> keylist_mgr:start().
 
-{ok,<0.92.0>,#Ref<0.2486560441.3979083780.258275>}
+{ok,<0.92.0>,#Ref<0.305497799.4247781382.233664>}
 
 4> keylist_mgr:start_child(#{name => keylist1, restart => temporary}).
 
@@ -46,12 +44,11 @@ ok
 
 8> keylist_mgr:start_child(#{name => keylist3, restart => permanent}).
 
-{<0.80.0>,start_child,
- #{name => keylist3,restart => permanent}}
+ok
 
 9> keylist_mgr:stop_child(keylist3).                                   
 
-{<0.80.0>,stop_child,keylist3}
+ok
 
 10> flush().
 
@@ -65,8 +62,8 @@ undefined
 
 12> exit(whereis(keylist1), somereason).
 
-true
 Down process <0.94.0> with reason somereason
+true
 
 13> whereis(keylist1).
 
@@ -92,7 +89,7 @@ true
 
 18> keylist_mgr:stop_process().
 
-stop
+ok
 
 19> whereis(keylist2).
 
