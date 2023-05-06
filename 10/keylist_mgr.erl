@@ -28,12 +28,12 @@ start() ->
 %% @doc API function for stop process ?MODULE and stop all child processes
 -spec(terminate(#state{children :: list(), permanent :: list()}) -> 
     ok).
-terminate(#state{children = _Children} = State) ->
+terminate(#state{children = Children} = State) ->
     lists:foreach(
                 fun({Name, _Pid}) ->
                     keylist:stop(Name)
                 end,
-                State#state.children),
+                Children),
                 ok.
 
 
@@ -41,14 +41,11 @@ terminate(#state{children = _Children} = State) ->
 %% to keylist_mgr process.
 -spec(start_child(Params :: #{name => atom(), restart => restart()}) ->
     ok | badarg).
-start_child(Params) ->
-    case Params of
-        #{name := _Proc_Name , restart := _Restart} ->
-            keylist_mgr ! {self(), start_child, Params},
+start_child(#{name := _Proc_Name , restart := _Restart} = Params) ->
+        keylist_mgr ! {self(), start_child, Params},
         ok;
-        _ ->
-            badarg
-    end.
+start_child(_Params) ->
+       badarg.
 
 %% @doc API function for send message {self(), stop_child, Name} to keylist_mgr process
 -spec(stop_child(Name :: atom()) ->

@@ -12,8 +12,7 @@
 -spec(start_link(Name :: atom()) ->
     Pid :: pid()).
 start_link(Name) ->
-    Pid = spawn_link(keylist, init, [Name]),
-    Pid.
+    spawn_link(keylist, init, [Name]).
 
 %% @doc API function for register new process and start function loop(#state{}).
 -spec(init(atom()) -> 
@@ -26,8 +25,7 @@ init(Name) ->
 -spec(start(Name :: atom()) -> 
     {Pid :: pid(), MonitorRef :: reference()}).
 start(Name) ->
-    {Pid, MonitorRef} = spawn_monitor(keylist, init, [Name]),
-    {Pid, MonitorRef}.
+    spawn_monitor(keylist, init, [Name]).
 
 %% @doc API function for exit process
 -spec(terminate() -> 

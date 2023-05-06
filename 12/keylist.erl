@@ -86,9 +86,7 @@ handle_call({find, Key}, _From, #state{list = List, counter = Counter} = State) 
     {reply, {Tuple, NewState}, NewState};
 handle_call({delete, Key}, _From, #state{list = List, counter = Counter} = State) ->
     NewState = State#state{list = lists:keydelete(Key, 1, List), counter = Counter + 1},
-    {reply, {ok, NewState}, NewState};
-handle_call(stop, _From, State) ->
-    {stop, normal, State}.
+    {reply, {ok, NewState}, NewState}.
 
 -spec(terminate(atom(), atom()) -> 
     ok).
