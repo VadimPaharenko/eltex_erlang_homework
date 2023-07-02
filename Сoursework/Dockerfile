@@ -13,14 +13,15 @@ RUN rebar3 as prod release
 
 FROM alpine:3.15
 
-ADD coursework2/c_src/Makefile /files/
-ADD coursework2/c_src/rtpsend.c /files/
-ADD coursework2/c_src/generate.wav /files/
+ADD coursework2/apps/coursework2/c_src/Makefile /files/
+ADD coursework2/apps/coursework2/c_src/rtpsend.c /files/
+ADD coursework2/apps/coursework2/c_src/generate.wav /files/
 
 RUN apk add --no-cache make build-base
 RUN apk add --no-cache ffmpeg
 RUN apk add --no-cache ortp-dev
 RUN apk add --no-cache bctoolbox-dev
+
 
 RUN (cd files/ && make)
 

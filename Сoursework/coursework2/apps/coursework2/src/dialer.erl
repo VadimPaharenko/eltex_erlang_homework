@@ -1,20 +1,9 @@
 -module(dialer).
 
+-include_lib("../nksip/include/nksip.hrl").
+
 -export([start/0, stop/0]).
 -export([invite/1, call/1]).
-
-%-record(sdp, {
-%    address,
-%    connect,
-%    time,
-%    medias}).
-
-%-record(sdp_m, {
-%    media,
-%    port,
-%    proto,
-%    fmt,
-%    attributes}).
 
 start() ->
     StartOptions = #{
@@ -47,12 +36,14 @@ call(Phone)->
             case invite(Phone) of
                 {ok, DialogId} ->
                     {ok, DialogMeta} = nksip_dialog:get_meta(invite_remote_sdp, DialogId),
-                    {_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,Media} = DialogMeta,
-                    [{_,_,Port,_,_,_,_,_,_,_,_}] = Media,
-                    ConvertVoice = "ffmpeg -i c_src/generate.wav -codec:a pcm_mulaw -ar 8000 -ac 1 c_src/output.wav -y",
-                    StartVoice = "./voice_client c_src/output.wav 10.0.10.11 " ++ erlang:integer_to_list(Port),
+                    %{_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,Media} = DialogMeta,
+                    %[{_,_,Port,_,_,_,_,_,_,_,_}] = Media,
+                    Port = (hd(DialogMeta#sdp.medias))#sdp_m.port,
+                    ConvertVoice = "ffmpeg -i /files/generate.wav -codec:a pcm_mulaw -ar 8000 -ac 1 /files/output.wav -y",
+                    StartVoice = "/voice_client /files/output.wav 10.0.10.11 " ++ erlang:integer_to_list(Port),
                     Cmd = ConvertVoice ++ " && " ++ StartVoice,
-                    Res = os:cmd(Cmd);
+                    Res = os:cmd(Cmd),
+                    nksip_uac:bye(DialogId, []);
                 Err ->
                     Err
                 end;
@@ -61,18 +52,7 @@ call(Phone)->
     end.
 
 invite(Phone)->
-    SDP = nksip_sdp:new("10.0.10.11", [{<<"audio">>, 9990, [{rtpmap, 0, "PCMU/8000"}, {rtpmap, 101, "telephone-event/8000"}, sendrecv]}]),
-        %#sdp{address = {<<"IN">>, <<"IP4">>, "10.0.20.11"},
-        %    connect = {<<"IN">>, <<"IP4">>, "10.0.20.11"},
-        %    time = [{0, 0, []}],
-        %    medias = [#sdp_m{media = <<"audio">>,
-        %                port = 9990,
-        %                proto = <<"RTP/AVP">>,
-        %                fmt = [<<"0">>, <<"101">>],
-        %    attributes = [{<<"sendrecv">>, []}]
-    %}
-    %]
-  %},
+    SDP = nksip_sdp:new("10.0.20.11", [{<<"audio">>, 9990, [{rtpmap, 0, "PCMU/8000"}, {rtpmap, 101, "telephone-event/8000"}, sendrecv]}]),
 
     InviteOptions = [
         auto_2xx_ack,
